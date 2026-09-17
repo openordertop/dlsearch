@@ -1,0 +1,38 @@
+[project]
+name = "DL Search"
+version = "0.0.1"
+description = "Buscador de Productos en múltiples Páginas"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "OpenOrdertop", email = "ordertop.me@gmail.com" }
+]
+dependencies = [
+    "flet>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli>=1.0.0",
+    "flet-desktop>=1.0.0",
+    "flet-web>=1.0.0",
+    "flet[test]>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.flet]
+desktop_flavor = "light"
+org = "com.mycompany"
+product = "search"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"
+
+[tool.flet.flutter.pubspec.dependency_overrides]
+flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
