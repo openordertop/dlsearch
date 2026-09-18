@@ -1,5 +1,5 @@
 [project]
-name = "DL Search"
+name = "dlsearch"
 version = "0.0.1"
 description = "Buscador de Productos en múltiples Páginas"
 readme = "README.md"
