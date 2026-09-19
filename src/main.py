@@ -3,11 +3,11 @@
 from flet import (
     run,
     Page, AppBar,
-    Container, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
+    Container, SafeArea, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
     Text, TextField, Button,
     Icons, Icon, Image, Colors, BorderRadius,
     MainAxisAlignment, CrossAxisAlignment,
-    UrlLauncher, LaunchMode, ControlEvent,
+    UrlLauncher, LaunchMode, ControlEvent, ScrollMode,
 )
 from asyncio import create_task
 
@@ -61,6 +61,7 @@ urls: dict = {
 class Index(Container):
     def __init__(self):
         super().__init__()
+        self.expand = True
         self.search_tf = TextField(
             label="Buscar Producto por Nombre, SKU, etc.",
             expand=True,
@@ -71,6 +72,8 @@ class Index(Container):
             controls=[
                 Icon(Icons.SEARCH),
             ],
+            scroll=ScrollMode.AUTO,
+            spacing=4,
             run_spacing=4,
         )
         self.content = Column(

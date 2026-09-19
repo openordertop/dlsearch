@@ -36,3 +36,6 @@ path = "src"
 
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
+
+[tool.flet.icons]
+android = "assets/icon.png"
