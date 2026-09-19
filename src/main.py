@@ -72,6 +72,7 @@ class Index(Container):
             controls=[
                 Icon(Icons.SEARCH),
             ],
+            expand=True,
             scroll=ScrollMode.AUTO,
             spacing=4,
             run_spacing=4,
@@ -90,6 +91,7 @@ class Index(Container):
                 ),
                 self.pages,
             ],
+            expand=True,
         )
 
     async def open_url(self, e, url: str):
