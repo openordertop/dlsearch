@@ -26,12 +26,12 @@ class IndexView(View):
                 controls=[
                     IndexContainer(
                         title="Buscar Productos en Página",
-                        image="icon.png",
+                        image="images/search.svg",
                         route="/search",
                     ),
                     IndexContainer(
                         title="Buscar Compatibilidades para Laptops",
-                        image="icon.png",
+                        image="images/laptops.svg",
                         route="/laptops",
                     ),
                 ],

@@ -46,6 +46,54 @@ class IndexContainer(Container):
             ResponsiveRowBreakpoint.XS: 6,
         }
 
+class SearchStack(Stack):
+    def __init__(self, tf_label: str, on_search) -> None:
+        super().__init__()
+        self.on_search=on_search
+        self.search=TextField(
+            label=tf_label,
+            on_submit=lambda _: self.send_search(),
+            on_change=lambda e: (
+                setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True)
+            ),
+            expand=True,
+            border=OutlineInputBorder(
+                border_radius=30,
+            ),
+            autofocus=True,
+        )
+        self.controls=[
+            Container(
+                content=Row(
+                    controls=[
+                        self.search,
+                        clear := Button(
+                            content=Icon(Icons.CLOSE),
+                            on_click=lambda e: (setattr(self.search, "value", ""), setattr(e.control, "visible", False)),
+                            visible=False,
+                        ),
+                        Button(
+                            content=Icon(Icons.SEARCH),
+                            on_click=lambda _: self.send_search(),
+                        ),
+                    ],
+                ),
+                bgcolor=Colors.SURFACE_CONTAINER,
+                padding=12,
+                margin=12,
+                expand=True,
+                border_radius=BorderRadius(30, 30, 30, 30),
+                blur=0.5,
+            ),
+        ]
+        self.bottom=0
+        self.right=0
+        self.left=0
+
+    def send_search(self) -> None:
+            if self.on_search:
+                self.on_search(self.search.value)
+
 class ResultContainer(Container):
     def __init__(self, search_value: str, urls: dict, where: str) -> None:
         super().__init__()
@@ -91,10 +139,13 @@ class KingtongCompatibilityContainer(Container):
         super().__init__()
         self.content=Column(
             controls=[
+                Text(
+                    value="Buscar Modelo en Kingtong Compatibility",
+                ),
                 Row(
                     controls=[
                         search := TextField(
-                            label="Buscar en Kingtong",
+                            label="Buscar por Marca, Modelo, etc.",
                             on_submit=lambda e: create_task(self.open_url(e, search.value)),
                             icon=Image(src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEUAAAAAAACAAAD/AACAgAAXKc/FAAAAAXRSTlMAQObYZgAAALBJREFUeAFt0NERg2AIA2DtBIILSJigZIK2++9UQdTTNm/57hB/hswoW4YOnBlg2fqDW8yjpAEwNStAdQ8ADQDDYcpATcCDCJETJLdETk4JI2RmZ/kPblot/A77r86RkJGpQCmsRMMI2/YioSQBOOFhChEFrGEO6TQ4qynjAkrasIMVQK5gx1YmZIbjyM+zN+gNYo4baH5mukBeuSEPKOQ54yvYDzjteP1nhbcTfOVJv/ycLwXcJ4Q/AAAAAElFTkSuQmCC"),
                             on_change=lambda e: (
@@ -122,50 +173,6 @@ class KingtongCompatibilityContainer(Container):
         self.alignment=Alignment.BOTTOM_CENTER
 
     async def open_url(self, e: ControlEvent, url: str):
-        await url_launch(e, f"https://www.kingston.com/en/memory/search/systemdevices?makeOrModel={url}")
-
-class SearchStack(Stack):
-    def __init__(self) -> None:
-        super().__init__()
-        self.controls=[
-            Container(
-                content=Row(
-                    controls=[
-                        search := TextField(
-                            label="Buscar en Kingtong",
-                            on_submit=lambda e: create_task(self.open_url(e, search.value)),
-                            icon=Image(src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEUAAAAAAACAAAD/AACAgAAXKc/FAAAAAXRSTlMAQObYZgAAALBJREFUeAFt0NERg2AIA2DtBIILSJigZIK2++9UQdTTNm/57hB/hswoW4YOnBlg2fqDW8yjpAEwNStAdQ8ADQDDYcpATcCDCJETJLdETk4JI2RmZ/kPblot/A77r86RkJGpQCmsRMMI2/YioSQBOOFhChEFrGEO6TQ4qynjAkrasIMVQK5gx1YmZIbjyM+zN+gNYo4baH5mukBeuSEPKOQ54yvYDzjteP1nhbcTfOVJv/ycLwXcJ4Q/AAAAAElFTkSuQmCC"),
-                            on_change=lambda e: (
-                                setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True)
-                            ),
-                            expand=True,
-                            border=OutlineInputBorder(
-                                border_radius=30,
-                            ),
-                            autofocus=True,
-                        ),
-                        clear := Button(
-                            content=Icon(Icons.CLOSE),
-                            on_click=lambda e: (setattr(search, "value", ""), setattr(e.control, "visible", False)),
-                            visible=False,
-                        ),
-                        Button(
-                            content=Icon(Icons.SEARCH),
-                            on_click=lambda e: create_task(self.open_url(e, search.value)),
-                        ),
-                    ],
-                ),
-                bgcolor=Colors.SURFACE_CONTAINER,
-                padding=12,
-                margin=12,
-                expand=True,
-                border_radius=BorderRadius(30, 30, 30, 30),
-                blur=0.5,
-            ),
-        ]
-        self.bottom=0
-        self.right=0
-        self.left=0
-
-    async def open_url(self, e: ControlEvent, url: str):
+        if url == "":
+            return
         await url_launch(e, f"https://www.kingston.com/en/memory/search/systemdevices?makeOrModel={url}")

@@ -1,3 +1,4 @@
+from re import search
 from flet import (
     View, Page, AppBar,
     Container, SafeArea, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
@@ -6,8 +7,8 @@ from flet import (
     MainAxisAlignment, CrossAxisAlignment,
     UrlLauncher, LaunchMode, ControlEvent, ScrollMode,
 )
+from components import ResultContainer, SearchStack
 from asyncio import create_task
-from components import ResultContainer
 
 urls: dict = {
     "Digitalife": {
@@ -60,20 +61,19 @@ class SearchView(View):
     def __init__(self) -> None:
         super().__init__()
         self.route = "/search"
+        self.expand = True
         self.appbar = AppBar(
             title="Buscar en Página",
         )
-        self.expand = True
-        self.search_tf = TextField(
-            label="Buscar Producto por Nombre, SKU, etc.",
-            expand=True,
-            autofocus=True,
-            on_submit=lambda e: self.search_pages(e),
+        self.search=SearchStack(
+            tf_label="Buscar Prodcuto por Nombre, SKU, etc.",
+            on_search=lambda e: self.send_search(e),
         )
         self.pages = ResponsiveRow(
             controls=[
                 Icon(Icons.SEARCH),
             ],
+            on_scroll=lambda e: (setattr(self.search, "visible", False) if e.pixels >= 1 else setattr(self.search, "visible", True)),
             expand=True,
             scroll=ScrollMode.AUTO,
             spacing=4,
@@ -82,16 +82,6 @@ class SearchView(View):
         self.controls = [
             Column(
                 controls=[
-                    Row(
-                        controls=[
-                            self.search_tf,
-                            Button(
-                                content="Buscar",
-                                icon=Icons.SEARCH,
-                                on_click=lambda e: self.search_pages(e),
-                            ),
-                        ],
-                    ),
                     self.pages,
                 ],
                 expand=True,
@@ -102,17 +92,15 @@ class SearchView(View):
         if self.page:
             await UrlLauncher().launch_url(url, mode=LaunchMode.EXTERNAL_APPLICATION)
 
-    def search_pages(self, e: ControlEvent) -> None:
-        self.pages.controls.clear()
-        search_value = self.search_tf.value or ""
-
-        if search_value == "":
+    def send_search(self, search: str) -> None:
+        if search == "":
             return
+        self.pages.controls.clear()
 
         for where in urls:
             self.pages.controls.append(
                 ResultContainer(
-                    search_value=search_value,
+                    search_value=search,
                     urls=urls,
                     where=where,
                 ),
@@ -120,4 +108,10 @@ class SearchView(View):
         self.update()
 
     def did_mount(self) -> None:
-        pass
+        self.page.overlay.clear()
+        self.page.overlay.append(self.search)
+        self.page.update()
+
+    def will_unmount(self) -> None:
+        self.page.overlay.clear()
+        self.page.update()
