@@ -73,7 +73,6 @@ class SearchView(View):
             controls=[
                 Icon(Icons.SEARCH),
             ],
-            on_scroll=lambda e: (setattr(self.search, "visible", False) if e.pixels >= 1 else setattr(self.search, "visible", True)),
             expand=True,
             scroll=ScrollMode.AUTO,
             spacing=4,
@@ -105,6 +104,7 @@ class SearchView(View):
                     where=where,
                 ),
             )
+        self.pages.controls.append(Container(margin=40))
         self.update()
 
     def did_mount(self) -> None:
