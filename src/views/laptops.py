@@ -1,20 +1,13 @@
 from flet import (
     View, Page, AppBar,
-    Container, SafeArea, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
+    Container, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
     Text, TextField, Button,
     Icons, Icon, Image, Colors, BorderRadius,
     MainAxisAlignment, CrossAxisAlignment,
     UrlLauncher, LaunchMode, ControlEvent, ScrollMode, ScrollType
 )
-from components import KingtongCompatibilityContainer
+from components import KingtongCompatibilityContainer, POWEContainer, NoJomoContainer
 from asyncio import create_task
-
-urls: dict = {
-    "Kingtong Technology": {
-        "url": "https://www.kingston.com/en/memory/search/systemdevices?makeOrModel={search}",
-        "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEUAAAAAAACAAAD/AACAgAAXKc/FAAAAAXRSTlMAQObYZgAAALBJREFUeAFt0NERg2AIA2DtBIILSJigZIK2++9UQdTTNm/57hB/hswoW4YOnBlg2fqDW8yjpAEwNStAdQ8ADQDDYcpATcCDCJETJLdETk4JI2RmZ/kPblot/A77r86RkJGpQCmsRMMI2/YioSQBOOFhChEFrGEO6TQ4qynjAkrasIMVQK5gx1YmZIbjyM+zN+gNYo4baH5mukBeuSEPKOQ54yvYDzjteP1nhbcTfOVJv/ycLwXcJ4Q/AAAAAElFTkSuQmCC",
-    },
-}
 
 class LaptopsView(View):
     def __init__(self) -> None:
@@ -28,8 +21,14 @@ class LaptopsView(View):
             Column(
                 controls=[
                     KingtongCompatibilityContainer(),
+                    Row(
+                        controls=[
+                            POWEContainer(),
+                            NoJomoContainer(),
+                        ],
+                        expand=True,
+                    ),
                 ],
-                expand=True,
             ),
         ]
 

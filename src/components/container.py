@@ -2,7 +2,8 @@ from flet import (
     Container, Row, Column, Stack,
     Text, Image, Icon, Icons, TextField, Button, OutlineInputBorder,
     UrlLauncher, LaunchMode, ControlEvent,
-    Colors, BorderRadius, ResponsiveRowBreakpoint, Alignment,
+    Colors, BorderRadius, ResponsiveRowBreakpoint,
+    Alignment, MainAxisAlignment, CrossAxisAlignment,
 )
 from tools import url_launch
 from asyncio import create_task
@@ -147,7 +148,7 @@ class KingtongCompatibilityContainer(Container):
                         search := TextField(
                             label="Buscar por Marca, Modelo, etc.",
                             on_submit=lambda e: create_task(self.open_url(e, search.value)),
-                            icon=Image(src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEUAAAAAAACAAAD/AACAgAAXKc/FAAAAAXRSTlMAQObYZgAAALBJREFUeAFt0NERg2AIA2DtBIILSJigZIK2++9UQdTTNm/57hB/hswoW4YOnBlg2fqDW8yjpAEwNStAdQ8ADQDDYcpATcCDCJETJLdETk4JI2RmZ/kPblot/A77r86RkJGpQCmsRMMI2/YioSQBOOFhChEFrGEO6TQ4qynjAkrasIMVQK5gx1YmZIbjyM+zN+gNYo4baH5mukBeuSEPKOQ54yvYDzjteP1nhbcTfOVJv/ycLwXcJ4Q/AAAAAElFTkSuQmCC"),
+                            icon=Image(src="icons/Kingston.png"),
                             on_change=lambda e: (
                                 setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True)
                             ),
@@ -167,7 +168,7 @@ class KingtongCompatibilityContainer(Container):
             ],
         )
         self.bgcolor=Colors.SURFACE_CONTAINER
-        self.border_radius=BorderRadius(10, 10, 10, 10)
+        self.border_radius=BorderRadius(30, 30, 30, 30)
         self.padding=12
         self.margin=4
         self.alignment=Alignment.BOTTOM_CENTER
@@ -176,3 +177,54 @@ class KingtongCompatibilityContainer(Container):
         if url == "":
             return
         await url_launch(e, f"https://www.kingston.com/en/memory/search/systemdevices?makeOrModel={url}")
+
+class POWEContainer(Container):
+    def __init__(self) -> None:
+        super().__init__()
+        self.content=Column(
+            controls=[
+                Text(
+                    value="Buscar Bateria o Cargador",
+                ),
+                Image(
+                    src="images/POWE.png",
+                    align=Alignment.CENTER
+                ),
+            ],
+        )
+        self.bgcolor=Colors.SURFACE_CONTAINER
+        self.border_radius=BorderRadius(30, 30, 30, 30)
+        self.padding=25
+        self.margin=4
+        self.ink=True
+        self.expand=True
+        self.on_click=lambda e: create_task(self.open_url(e))
+
+    async def open_url(self, e: ControlEvent):
+        await url_launch(e, f"https://www.powe.mx")
+
+class NoJomoContainer(Container):
+    def __init__(self) -> None:
+        super().__init__()
+        self.content=Column(
+            controls=[
+                Text(
+                    value="Buscar Bateria, Cargador, Displays, etc.",
+                ),
+                Image(
+                    src="images/NoJomo.png",
+                    align=Alignment.CENTER
+                ),
+            ],
+            expand=True,
+        )
+        self.bgcolor=Colors.SURFACE_CONTAINER
+        self.border_radius=BorderRadius(30, 30, 30, 30)
+        self.padding=25
+        self.margin=4
+        self.ink=True
+        self.expand=True
+        self.on_click=lambda e: create_task(self.open_url(e))
+
+    async def open_url(self, e: ControlEvent):
+        await url_launch(e, f"https://www.nojomo.com.mx/home.php")
