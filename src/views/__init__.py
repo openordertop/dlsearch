@@ -10,8 +10,13 @@ from .laptops import (
     LaptopsView,
 )
 
+from .tabulador import (
+    TabuladorView,
+)
+
 __all__ = [
      "IndexView",
      "SearchView",
      "LaptopsView",
+     "TabuladorView",
  ]

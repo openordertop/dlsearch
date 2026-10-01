@@ -5,6 +5,7 @@ from .container import (
     KingtongCompatibilityContainer,
     POWEContainer,
     NoJomoContainer,
+    TabbuladorFieldContainer,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "SearchStack",
     "POWEContainer",
     "NoJomoContainer",
+    "TabbuladorFieldContainer",
 ]

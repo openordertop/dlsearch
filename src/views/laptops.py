@@ -1,10 +1,7 @@
 from flet import (
-    View, Page, AppBar,
-    Container, Row, Column, ResponsiveRow, ResponsiveRowBreakpoint,
-    Text, TextField, Button,
-    Icons, Icon, Image, Colors, BorderRadius,
-    MainAxisAlignment, CrossAxisAlignment,
-    UrlLauncher, LaunchMode, ControlEvent, ScrollMode, ScrollType
+    View, AppBar,
+    Container, Row, Column,
+    ScrollMode,
 )
 from components import KingtongCompatibilityContainer, POWEContainer, NoJomoContainer
 from asyncio import create_task
@@ -29,12 +26,10 @@ class LaptopsView(View):
                         expand=True,
                     ),
                 ],
+                expand=True,
+                scroll=ScrollMode.AUTO,
             ),
         ]
-
-    async def open_url(self, e, url: str):
-        if self.page:
-            await UrlLauncher().launch_url(url, mode=LaunchMode.EXTERNAL_APPLICATION)
 
     def did_mount(self) -> None:
         self.page.overlay.clear()

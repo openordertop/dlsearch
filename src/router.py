@@ -2,7 +2,7 @@ from flet import (
     Page,
 )
 
-from views import IndexView, SearchView, LaptopsView
+from views import IndexView, SearchView, LaptopsView, TabuladorView
 
 class Router:
     def __init__(self, page: Page) -> None:
@@ -17,6 +17,8 @@ class Router:
                     page.views.append(SearchView())
                 case ["laptops"]:
                     page.views.append(LaptopsView())
+                case ["tabulador"]:
+                    page.views.append(TabuladorView())
             page.update()
 
         async def view_pop(e) -> None:

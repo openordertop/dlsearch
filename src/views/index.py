@@ -34,6 +34,11 @@ class IndexView(View):
                         image="images/laptops.svg",
                         route="/laptops",
                     ),
+                    IndexContainer(
+                        title="Tabulador",
+                        image="images/laptops.svg",
+                        route="/tabulador",
+                    ),
                 ],
                 scroll=ScrollMode.AUTO,
                 expand=True,

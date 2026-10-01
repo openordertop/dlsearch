@@ -71,7 +71,9 @@ class SearchView(View):
         )
         self.pages = ResponsiveRow(
             controls=[
-                Icon(Icons.SEARCH),
+                Icon(
+                    icon=Icons.SEARCH,
+                ),
             ],
             expand=True,
             scroll=ScrollMode.AUTO,

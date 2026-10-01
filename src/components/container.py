@@ -152,6 +152,9 @@ class KingtongCompatibilityContainer(Container):
                             on_change=lambda e: (
                                 setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True)
                             ),
+                            border=OutlineInputBorder(
+                                border_radius=30,
+                            ),
                             expand=True,
                         ),
                         clear := Button(
@@ -228,3 +231,105 @@ class NoJomoContainer(Container):
 
     async def open_url(self, e: ControlEvent):
         await url_launch(e, f"https://www.nojomo.com.mx/home.php")
+
+class TabbuladorFieldContainer(Container):
+    def __init__(self, rango: list) -> None:
+        super().__init__()
+        self.rango = rango
+        self.content=Column(
+            controls=[
+                Text(
+                    value="Ingresa el Total del Mes",
+                ),
+                Row(
+                    controls=[
+                        search := TextField(
+                            label="Calcular el Total que debe llegar de Comisiones",
+                            on_submit=lambda e: create_task(calculate(e, e.control.value)),
+                            on_change=lambda e: (
+                                setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True),
+                                setattr(e.control, "color", Colors.PRIMARY) if e.control.value.isdigit() else setattr(e.control, "color", Colors.RED)
+                            ),
+                            border=OutlineInputBorder(
+                                border_radius=30,
+                            ),
+                            autofocus=True,
+                            expand=True,
+                        ),
+                        clear := Button(
+                            content=Icon(Icons.CLOSE),
+                            on_click=lambda e: (setattr(search, "value", ""), setattr(e.control, "visible", False)),
+                            visible=False,
+                        ),
+                        Button(
+                            content=Icon(Icons.CALCULATE),
+                            on_click=lambda e: create_task(calculate(e, search.value)),
+                        ),
+                    ],
+                ),
+                Row(
+                    controls=[
+                        Container(
+                            content=Column(
+                                controls=[
+                                    Text(
+                                        value="Monto",
+                                    ),
+                                    monto_text := Text(
+                                        value=" $ - - - . - ",
+                                    ),
+                                ],
+                            ),
+                        ),
+                        Container(
+                            content=Column(
+                                controls=[
+                                    Text(
+                                        value="Porcentaje",
+                                    ),
+                                    porcentaje_text := Text(
+                                        value=" - - . - % ",
+                                    ),
+                                ],
+                            ),
+                        ),
+                        Container(
+                            content=Column(
+                                controls=[
+                                    Text(
+                                        value="Resultado",
+                                    ),
+                                    resultado_text := Text(
+                                        value=" $ - , - - - . - - ",
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+            ],
+        )
+        self.bgcolor=Colors.SURFACE_CONTAINER
+        self.border_radius=BorderRadius(30, 30, 30, 30)
+        self.padding=12
+        self.margin=4
+        self.alignment=Alignment.BOTTOM_CENTER
+
+        async def calculate(e: ControlEvent, total_str: str) -> None:
+            if total_str == "" or not total_str.isdigit():
+                return
+            total: int = int(total_str)
+            indice: int = 0
+            if not int(total) < 0:
+                if not int(total) <= 50000:
+                    indice = round((int(total) - 0.01) / 50000)
+
+            if indice >= 39:
+                indice = 39
+
+            monto: float = rango[indice]
+            porcentaje: float = total / 50000.0
+            resultado: float = porcentaje * monto
+            monto_text.value = f" $ {monto} "
+            porcentaje_text.value = f" {porcentaje:,.2f} % "
+            resultado_text.value = f" $ {resultado:,.2f} "
