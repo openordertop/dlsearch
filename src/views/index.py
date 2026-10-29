@@ -34,6 +34,11 @@ class IndexView(View):
                         image="images/laptops.svg",
                         route="/laptops",
                     ),
+                    # IndexContainer(
+                    #     title="Zenvia Tools",
+                    #     image="images/laptops.svg",
+                    #     route="/zenvia",
+                    # ),
                     IndexContainer(
                         title="Tabulador",
                         image="images/laptops.svg",

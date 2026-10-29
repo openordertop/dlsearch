@@ -1,12 +1,12 @@
 from flet import (
-    Container, Row, Column, Stack,
+    Container, Row, Column, Stack, AlertDialog,
     Text, Image, Icon, Icons, TextField, Button, OutlineInputBorder,
-    UrlLauncher, LaunchMode, ControlEvent,
-    Colors, BorderRadius, ResponsiveRowBreakpoint,
+    UrlLauncher, LaunchMode, ControlEvent, Icon,
+    Colors, BorderRadius, ResponsiveRowBreakpoint, Clipboard,
     Alignment, MainAxisAlignment, CrossAxisAlignment,
 )
-from tools import url_launch
 from asyncio import create_task
+from tools import url_launch
 
 class IndexContainer(Container):
     def __init__(self, title: str, image: str, route: str) -> None:
@@ -92,8 +92,8 @@ class SearchStack(Stack):
         self.left=0
 
     def send_search(self) -> None:
-            if self.on_search:
-                self.on_search(self.search.value)
+        if self.on_search:
+            self.on_search(self.search.value)
 
 class ResultContainer(Container):
     def __init__(self, search_value: str, urls: dict, where: str) -> None:
@@ -191,7 +191,9 @@ class POWEContainer(Container):
                 ),
                 Image(
                     src="images/POWE.png",
-                    align=Alignment.CENTER
+                    align=Alignment.CENTER,
+                    height=200,
+                    width=200,
                 ),
             ],
         )
@@ -206,17 +208,19 @@ class POWEContainer(Container):
     async def open_url(self, e: ControlEvent):
         await url_launch(e, f"https://www.powe.mx")
 
-class NoJomoContainer(Container):
+class LenovoPartLookupContainer(Container):
     def __init__(self) -> None:
         super().__init__()
         self.content=Column(
             controls=[
                 Text(
-                    value="Buscar Bateria, Cargador, Displays, etc.",
+                    value="Busqueda de Piezas Lenovo",
                 ),
                 Image(
-                    src="images/NoJomo.png",
-                    align=Alignment.CENTER
+                    src="images/Lenovo.png",
+                    align=Alignment.CENTER,
+                    height=200,
+                    width=200,
                 ),
             ],
             expand=True,
@@ -230,7 +234,81 @@ class NoJomoContainer(Container):
         self.on_click=lambda e: create_task(self.open_url(e))
 
     async def open_url(self, e: ControlEvent):
-        await url_launch(e, f"https://www.nojomo.com.mx/home.php")
+        await url_launch(e, f"https://support.lenovo.com/mx/es/parts-lookup")
+
+class DellFindPartsContainer(Container):
+    def __init__(self) -> None:
+        super().__init__()
+        self.content=Column(
+            controls=[
+                Text(
+                    value="Busqueda de Piezas Dell",
+                ),
+                Image(
+                    src="images/DELL.png",
+                    align=Alignment.CENTER,
+                    height=200,
+                    width=200,
+                ),
+            ],
+            expand=True,
+        )
+        self.bgcolor=Colors.SURFACE_CONTAINER
+        self.border_radius=BorderRadius(30, 30, 30, 30)
+        self.padding=25
+        self.margin=4
+        self.ink=True
+        self.expand=True
+        self.on_click=lambda e: create_task(self.open_url(e))
+
+    async def open_url(self, e: ControlEvent):
+        await url_launch(e, f"https://www.dell.com/en-us/shop/dell-parts/partsforyourdell?showMessage=1")
+
+class HPPartSufaceContainer(Container):
+    def __init__(self) -> None:
+        super().__init__()
+        self.content=Column(
+            controls=[
+                Text(
+                    value="Buscar General HP PartSurface",
+                ),
+                Row(
+                    controls=[
+                        search := TextField(
+                            label="Buscar por Marca, Modelo, etc.",
+                            on_submit=lambda e: create_task(self.open_url(e, search.value)),
+                            icon=Image(src="icons/hp.png"),
+                            on_change=lambda e: (
+                                setattr(clear, "visible", False) if e.control.value == "" else setattr(clear, "visible", True)
+                            ),
+                            border=OutlineInputBorder(
+                                border_radius=30,
+                            ),
+                            expand=True,
+                        ),
+                        clear := Button(
+                            content=Icon(Icons.CLOSE),
+                            on_click=lambda e: (setattr(search, "value", ""), setattr(e.control, "visible", False)),
+                            visible=False,
+                        ),
+                        Button(
+                            content=Icon(Icons.SEARCH),
+                            on_click=lambda e: create_task(self.open_url(e, search.value)),
+                        ),
+                    ],
+                ),
+            ],
+        )
+        self.bgcolor=Colors.SURFACE_CONTAINER
+        self.border_radius=BorderRadius(30, 30, 30, 30)
+        self.padding=12
+        self.margin=4
+        self.alignment=Alignment.BOTTOM_CENTER
+
+    async def open_url(self, e: ControlEvent, url: str):
+        if url == "":
+            return
+        await url_launch(e, f"https://partsurfer.hp.com/?searchtext={url}")
 
 class TabbuladorFieldContainer(Container):
     def __init__(self, rango: list) -> None:
@@ -333,3 +411,42 @@ class TabbuladorFieldContainer(Container):
             monto_text.value = f" $ {monto} "
             porcentaje_text.value = f" {porcentaje:,.2f} % "
             resultado_text.value = f" $ {resultado:,.2f} "
+
+class ZenviaCopyContainer(Container):
+    def __init__(self, text: str, value: str) -> None:
+        super().__init__()
+        self.alert = AlertDialog(
+
+        )
+        self.text = text
+        self.content = Row(
+            controls = [
+                Text(
+                    value = self.text,
+                    expand = True,
+                ),
+                Icon(
+                    icon = Icons.COPY,
+
+                ),
+            ],
+            expand = True,
+        )
+        self.col={
+            ResponsiveRowBreakpoint.XXL: 4,
+            ResponsiveRowBreakpoint.XL: 6,
+            ResponsiveRowBreakpoint.LG: 6,
+            ResponsiveRowBreakpoint.MD: 6,
+            ResponsiveRowBreakpoint.SM: 12,
+            ResponsiveRowBreakpoint.XS: 24,
+        }
+        self.bgcolor = Colors.SURFACE_CONTAINER
+        self.border_radius = BorderRadius(30, 30, 30, 30)
+        self.padding = 25
+        self.margin = 4
+        self.ink = True
+        self.expand = True
+        self.on_click = lambda _: create_task(Clipboard().set(value))
+        self.on_click = lambda e: e.page.show_dialog(
+            AlertDialog(),
+        )

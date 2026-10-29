@@ -3,7 +3,7 @@ from flet import (
     Container, Row, Column,
     ScrollMode,
 )
-from components import KingtongCompatibilityContainer, POWEContainer, NoJomoContainer
+from components import KingtongCompatibilityContainer, POWEContainer, LenovoPartLookupContainer, DellFindPartsContainer, HPPartSufaceContainer
 from asyncio import create_task
 
 class LaptopsView(View):
@@ -18,10 +18,12 @@ class LaptopsView(View):
             Column(
                 controls=[
                     KingtongCompatibilityContainer(),
+                    HPPartSufaceContainer(),
                     Row(
                         controls=[
                             POWEContainer(),
-                            NoJomoContainer(),
+                            LenovoPartLookupContainer(),
+                            DellFindPartsContainer(),
                         ],
                         expand=True,
                     ),
